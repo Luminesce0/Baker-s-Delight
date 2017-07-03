@@ -1,4 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Name -->
     <string name="app_name">Baker\'s Delight</string>
+
+    <!-- Layout Strings -->
     <string name="action_settings">Settings</string>
+    <string name="recipe_servings">Servings:</string>
+
+    <!-- String Keys -->
+    <string name="recipe_base_key">recipeKey</string>
+
+    <!-- Json Information -->
+    <string name="json_recipe_url">https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json</string>
 </resources>
