@@ -1,9 +1,12 @@
 package com.omegaspocktari.bakersdelight.data;
 
+import org.parceler.Parcel;
+
 /**
  * Created by ${Michael} on 6/29/2017.
  */
 
+@Parcel
 public class RecipeSteps {
 
     // Variable Holders for Recipe Steps
