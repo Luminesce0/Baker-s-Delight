@@ -28,27 +28,27 @@ public class RecipeBase {
         this.mImage = mImage;
     }
 
-    public String getmID() {
+    public String getID() {
         return mID;
     }
 
-    public String getmName() {
+    public String getName() {
         return mName;
     }
 
-    public List<RecipeIngredients> getmRecipeIngredients() {
+    public List<RecipeIngredients> getRecipeIngredients() {
         return mRecipeIngredients;
     }
 
-    public List<RecipeSteps> getmRecipeSteps() {
+    public List<RecipeSteps> getRecipeSteps() {
         return mRecipeSteps;
     }
 
-    public String getmServings() {
+    public String getServings() {
         return mServings;
     }
 
-    public String getmImage() {
+    public String getImage() {
         return mImage;
     }
 }

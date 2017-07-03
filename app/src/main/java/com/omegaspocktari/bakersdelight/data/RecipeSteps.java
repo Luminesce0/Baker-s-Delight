@@ -25,23 +25,23 @@ public class RecipeSteps {
         this.mThumbnailURL = mThumbnailURL;
     }
 
-    public String getmID() {
+    public String getID() {
         return mID;
     }
 
-    public String getmShortDescription() {
+    public String getShortDescription() {
         return mShortDescription;
     }
 
-    public String getmDescription() {
+    public String getDescription() {
         return mDescription;
     }
 
-    public String getmVideoURL() {
+    public String getVideoURL() {
         return mVideoURL;
     }
 
-    public String getmThumbnailURL() {
+    public String getThumbnailURL() {
         return mThumbnailURL;
     }
 }

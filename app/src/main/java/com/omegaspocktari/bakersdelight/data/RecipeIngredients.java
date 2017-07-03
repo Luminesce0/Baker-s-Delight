@@ -23,15 +23,15 @@ public class RecipeIngredients {
         this.mIngredient = mIngredient;
     }
 
-    public String getmQuantity() {
+    public String getQuantity() {
         return mQuantity;
     }
 
-    public String getmMeasure() {
+    public String getMeasure() {
         return mMeasure;
     }
 
-    public String getmIngredient() {
+    public String getIngredient() {
         return mIngredient;
     }
 }
