@@ -89,9 +89,7 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
 
         public RecipeListViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(recipePicture, itemView);
-            ButterKnife.bind(recipeName, itemView);
-            ButterKnife.bind(recipeServings, itemView);
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 
@@ -103,7 +101,7 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
                         .into(recipePicture);
             } else {
                 //TODO: This may not function properly
-                recipePicture.setVisibility(View.GONE);
+                recipePicture.setVisibility(View.INVISIBLE);
             }
 
             //Recipe Name
@@ -114,6 +112,8 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
             //https://developer.android.com/guide/topics/resources/string-resource.html
             String servingSizeString = mContext.getString(R.string.recipe_servings) + recipeBase.getServings();
             recipeServings.setText(servingSizeString);
+
+            Log.d(LOG_TAG, "Here is the current recipe in [RecipeListAdapter]: " + recipeBase.getID());
         }
 
         @Override
