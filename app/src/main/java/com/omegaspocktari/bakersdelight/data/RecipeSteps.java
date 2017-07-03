@@ -10,12 +10,13 @@ import org.parceler.Parcel;
 public class RecipeSteps {
 
     // Variable Holders for Recipe Steps
-    private String mID;
-    private String mShortDescription;
-    private String mDescription;
-    private String mVideoURL;
-    private String mThumbnailURL;
+    public String mID;
+    public String mShortDescription;
+    public String mDescription;
+    public String mVideoURL;
+    public String mThumbnailURL;
 
+    public RecipeSteps () {}
 
     public RecipeSteps(String mID, String mShortDescription, String mDescription, String mVideoURL, String mThumbnailURL) {
         this.mID = mID;

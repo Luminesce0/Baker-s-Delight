@@ -1,5 +1,6 @@
 package com.omegaspocktari.bakersdelight.data;
 
+
 import org.parceler.Parcel;
 
 /**
@@ -10,9 +11,9 @@ import org.parceler.Parcel;
 public class RecipeIngredients {
 
     // Variable Holders for Recipe Ingredients
-    private String mQuantity;
-    private String mMeasure;
-    private String mIngredient;
+    public String mQuantity;
+    public String mMeasure;
+    public String mIngredient;
 
     public RecipeIngredients() {
     }
