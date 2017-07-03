@@ -27,4 +27,28 @@ public class RecipeBase {
         this.mServings = mServings;
         this.mImage = mImage;
     }
+
+    public String getmID() {
+        return mID;
+    }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public List<RecipeIngredients> getmRecipeIngredients() {
+        return mRecipeIngredients;
+    }
+
+    public List<RecipeSteps> getmRecipeSteps() {
+        return mRecipeSteps;
+    }
+
+    public String getmServings() {
+        return mServings;
+    }
+
+    public String getmImage() {
+        return mImage;
+    }
 }

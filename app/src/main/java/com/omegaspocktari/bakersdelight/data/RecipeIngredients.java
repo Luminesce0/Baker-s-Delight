@@ -22,4 +22,16 @@ public class RecipeIngredients {
         this.mMeasure = mMeasure;
         this.mIngredient = mIngredient;
     }
+
+    public String getmQuantity() {
+        return mQuantity;
+    }
+
+    public String getmMeasure() {
+        return mMeasure;
+    }
+
+    public String getmIngredient() {
+        return mIngredient;
+    }
 }

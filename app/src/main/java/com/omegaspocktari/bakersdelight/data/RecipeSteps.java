@@ -24,4 +24,24 @@ public class RecipeSteps {
         this.mVideoURL = mVideoURL;
         this.mThumbnailURL = mThumbnailURL;
     }
+
+    public String getmID() {
+        return mID;
+    }
+
+    public String getmShortDescription() {
+        return mShortDescription;
+    }
+
+    public String getmDescription() {
+        return mDescription;
+    }
+
+    public String getmVideoURL() {
+        return mVideoURL;
+    }
+
+    public String getmThumbnailURL() {
+        return mThumbnailURL;
+    }
 }
