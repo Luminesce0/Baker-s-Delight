@@ -1,12 +1,12 @@
 package com.omegaspocktari.bakersdelight.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -25,15 +25,13 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
  * Created by ${Michael} on 6/26/2017.
  */
 
 public class RecipeListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<List<RecipeBase>>,
-        RecipeListAdapter.RecipeListAdapterOnClickHandler {
+        RecipeListAdapter.RecipeBaseListAdapterOnClickHandler {
 
     //Logging Tag
     private static final String LOG_TAG = RecipeListFragment.class.getSimpleName();
@@ -57,7 +55,7 @@ public class RecipeListFragment extends Fragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //Get the layout we want to use for this fragment
+        //Acquire the layout we wish to use
         View rootView = inflater.inflate(R.layout.recipe_list_fragment, container, false);
 
         // Acquire a connectivity manager to see if the network is connected.
@@ -88,11 +86,6 @@ public class RecipeListFragment extends Fragment implements
         return rootView;
     }
 
-    /**
-     * Called when the Fragment is visible to the user.  This is generally
-     * tied to {@link Activity#onStart() Activity.onStart} of the containing
-     * Activity's lifecycle.
-     */
     @Override
     public void onStart() {
         super.onStart();
@@ -116,13 +109,22 @@ public class RecipeListFragment extends Fragment implements
         }
     }
 
-    //TODO: Create RecipeDetailFragment
     @Override
     public void onListItemClick(RecipeBase recipeBase) {
         Log.d(LOG_TAG, "onClick of [RecipeListAdapter]");
-        Intent recipeDetailName = new Intent(getContext(), RecipeDetailFragment.class);
-        recipeDetailName.putExtra(getString(R.string.recipe_base_key), Parcels.wrap(recipeBase));
-        startActivity(recipeDetailName);
+        //Create the fragment to be added to the stack
+        Fragment fragment = new RecipeDetailFragment();
+
+        //Create bundle to attach to and send with the fragment
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(getString(R.string.recipe_base_key), Parcels.wrap(recipeBase));
+        fragment.setArguments(bundle);
+
+        //Create the transaction to interact with the stack and add previous fragment to the backstack
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.activity_main_fragment_holder, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override

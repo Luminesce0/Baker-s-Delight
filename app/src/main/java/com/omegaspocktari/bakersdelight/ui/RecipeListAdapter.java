@@ -27,7 +27,7 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
     private static final String LOG_TAG = RecipeListAdapter.class.getSimpleName();
 
     // Click Handler
-    private final RecipeListAdapterOnClickHandler mClickHandler;
+    private final RecipeBaseListAdapterOnClickHandler mClickHandler;
 
     // List to move about the recipes
     private List<RecipeBase> mRecipeBaseList;
@@ -35,7 +35,7 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
     // Context
     private Context mContext;
 
-    public RecipeListAdapter(Context context, RecipeListAdapterOnClickHandler clickHandler) {
+    public RecipeListAdapter(Context context, RecipeBaseListAdapterOnClickHandler clickHandler) {
         mContext = context;
         mClickHandler = clickHandler;
     }
@@ -73,11 +73,10 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
         }
     }
 
-    public interface RecipeListAdapterOnClickHandler {
+    public interface RecipeBaseListAdapterOnClickHandler {
         void onListItemClick(RecipeBase recipeBase);
     }
 
-    // TODO: Set this up once there's enough data to create the card views
     public class RecipeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.iv_recipe_picture)
@@ -100,7 +99,6 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
                         .load(recipeBase.getImage())
                         .into(recipePicture);
             } else {
-                //TODO: This may not function properly
                 recipePicture.setVisibility(View.INVISIBLE);
             }
 
