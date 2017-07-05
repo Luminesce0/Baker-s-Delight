@@ -1,5 +1,5 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/master_list_fragment"
+    android:id="@+id/activity_main_fragment_holder"
     android:name="com.omegaspocktari.bakersdelight.ui.RecipeListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
