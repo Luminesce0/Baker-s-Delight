@@ -17,6 +17,8 @@ import com.omegaspocktari.bakersdelight.data.RecipeSteps;
 
 import org.parceler.Parcels;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -41,6 +43,7 @@ public class RecipeDetailFragment extends Fragment implements
 
     //RecipeBase Object
     RecipeBase mRecipeBase;
+    private List<RecipeBase> mRecipeBaseList;
 
 
     @Nullable
@@ -54,6 +57,7 @@ public class RecipeDetailFragment extends Fragment implements
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             mRecipeBase = Parcels.unwrap(bundle.getParcelable(getString(R.string.recipe_base_key)));
+            mRecipeBaseList = Parcels.unwrap(bundle.getParcelable(getString(R.string.recipe_base_list_key)));
         }
 
         //Grid Layout that will offer a grid for ingredients and a single row for steps
@@ -76,7 +80,7 @@ public class RecipeDetailFragment extends Fragment implements
         });
 
         //Setup the adapter
-        mRecipeDetailAdapter = new RecipeDetailAdapter(getContext(), mRecipeBase, this);
+        mRecipeDetailAdapter = new RecipeDetailAdapter(getContext(), mRecipeBase, mRecipeBaseList, this);
 
         //Setup Recycler View
         mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -86,7 +90,7 @@ public class RecipeDetailFragment extends Fragment implements
     }
 
     @Override
-    public void onListItemClick(RecipeSteps recipeStep, boolean isRecipe) {
+    public void onListItemClick(RecipeSteps recipeStep, boolean isRecipe, List<RecipeBase> recipeBaseList) {
         if (isRecipe == true) {
             Log.d(LOG_TAG, "onClick of [RecipeDetailFragment]");
             //Create the fragment to be added to the stack
@@ -95,6 +99,7 @@ public class RecipeDetailFragment extends Fragment implements
             //Create bundle to attach to and send with the fragment
             Bundle bundle = new Bundle();
             bundle.putParcelable(getString(R.string.recipe_base_key), Parcels.wrap(mRecipeBase));
+            bundle.putParcelable(getString(R.string.recipe_base_list_key), Parcels.wrap(mRecipeBaseList));
             fragment.setArguments(bundle);
 
             //Create the transaction to interact with the stack and add previous fragment to the backstack

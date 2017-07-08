@@ -31,6 +31,9 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     //Click Handler
     private final RecipeDetailListAdapterOnClickHandler mClickHandler;
 
+    //Recipe Base List for detail step passing
+    private List<RecipeBase> mRecipeBaseList;
+
     //Recipe Base object to obtain lists
     private RecipeBase mRecipeBase;
 
@@ -45,10 +48,12 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private int mIngredientsSize;
     private int mStepsSize;
 
-    public RecipeDetailAdapter(Context context, RecipeBase recipeBase, RecipeDetailListAdapterOnClickHandler clickHandler) {
+    public RecipeDetailAdapter(Context context, RecipeBase recipeBase, List<RecipeBase> recipeBaseList,
+                               RecipeDetailListAdapterOnClickHandler clickHandler) {
         mContext = context;
         mClickHandler = clickHandler;
         mRecipeBase = recipeBase;
+        mRecipeBaseList = recipeBaseList;
 
         //Verify list isn't empty
         if (recipeBase.getRecipeSteps().size() > 0) {
@@ -134,7 +139,6 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }
 
-    //TODO: Will I need this later? Hmmm...
     @Override
     public int getItemCount() {
         return mStepsSize + mIngredientsSize;
@@ -154,10 +158,9 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public interface RecipeDetailListAdapterOnClickHandler {
-        void onListItemClick(RecipeSteps recipeStep, boolean isRecipe);
+        void onListItemClick(RecipeSteps recipeStep, boolean isRecipe, List<RecipeBase> mRecipeBaseList);
     }
 
-    // TODO: Set this up once there's enough data to create the card views
     public class RecipeIngredientViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_ingredient_ingredient)
         TextView ingredient;
@@ -209,11 +212,11 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (getAdapterPosition() >= mIngredientsSize) {
                 //Clicked item is a recipe step
                 isRecipeStep = true;
-                mClickHandler.onListItemClick(recipeStep, isRecipeStep);
+                mClickHandler.onListItemClick(recipeStep, isRecipeStep, mRecipeBaseList);
             } else {
                 //Clicked item is not a recipe step
                 isRecipeStep = false;
-                mClickHandler.onListItemClick(recipeStep, isRecipeStep);
+                mClickHandler.onListItemClick(recipeStep, isRecipeStep, mRecipeBaseList);
             }
 
         }

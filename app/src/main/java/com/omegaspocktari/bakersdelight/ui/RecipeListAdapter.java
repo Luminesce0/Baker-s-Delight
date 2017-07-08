@@ -40,7 +40,6 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
         mClickHandler = clickHandler;
     }
 
-    // TODO: Might be able to delete this & Might also be able to get rid of the if statement
     public void swapList(List<RecipeBase> newList) {
         if (newList != null && newList.size() > 0) {
             mRecipeBaseList = newList;
@@ -74,7 +73,7 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
     }
 
     public interface RecipeBaseListAdapterOnClickHandler {
-        void onListItemClick(RecipeBase recipeBase);
+        void onListItemClick(RecipeBase recipeBase, List<RecipeBase> mRecipeBaseList);
     }
 
     public class RecipeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -117,11 +116,11 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
         @Override
         public void onClick(View v) {
             Log.d(LOG_TAG, "onClick of [RecipeListAdapter]");
-            //Get recipeBase
+            //Get mRecipeBase
             RecipeBase recipeBase = mRecipeBaseList.get(getAdapterPosition());
 
-            //Send the relevant recipeBase
-            mClickHandler.onListItemClick(recipeBase);
+            //Send the relevant mRecipeBase
+            mClickHandler.onListItemClick(recipeBase, mRecipeBaseList);
         }
     }
 }

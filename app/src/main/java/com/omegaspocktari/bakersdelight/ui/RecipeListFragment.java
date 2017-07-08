@@ -25,6 +25,9 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by ${Michael} on 6/26/2017.
  */
@@ -43,7 +46,10 @@ public class RecipeListFragment extends Fragment implements
     private static final String RECIPE_INFO_URL = "recipeUrl";
 
     //Views for layout
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.rv_recipe_list)
+    RecyclerView mRecyclerView;
+
+    //Layout Manager
     private LinearLayoutManager layoutManager;
 
     //Adapter
@@ -52,11 +58,13 @@ public class RecipeListFragment extends Fragment implements
     //NetworkInfo to check network connectivity
     private NetworkInfo mNetworkInfo;
 
+    //TODO: Potentially found out how to appropriately add butterknife to this
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //Acquire the layout we wish to use
+        //Acquire the layout we wish to use and bind views
         View rootView = inflater.inflate(R.layout.recipe_list_fragment, container, false);
+        ButterKnife.bind(this, rootView);
 
         // Acquire a connectivity manager to see if the network is connected.
         ConnectivityManager connectivityManager = (ConnectivityManager)
@@ -64,9 +72,6 @@ public class RecipeListFragment extends Fragment implements
 
         // Get the current active network's info.
         mNetworkInfo = connectivityManager.getActiveNetworkInfo();
-
-        //Bind RecyclerView to the layout
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_recipe_list);
 
         //Improve performance
         mRecyclerView.setHasFixedSize(true);
@@ -110,14 +115,15 @@ public class RecipeListFragment extends Fragment implements
     }
 
     @Override
-    public void onListItemClick(RecipeBase recipeBase) {
-        Log.d(LOG_TAG, "onClick of [RecipeListAdapter]");
+    public void onListItemClick(RecipeBase recipeBase, List<RecipeBase> recipeBaseList) {
+        Log.d(LOG_TAG, "onClick of [RecipeListFragment]");
         //Create the fragment to be added to the stack
         Fragment fragment = new RecipeDetailFragment();
 
         //Create bundle to attach to and send with the fragment
         Bundle bundle = new Bundle();
         bundle.putParcelable(getString(R.string.recipe_base_key), Parcels.wrap(recipeBase));
+        bundle.putParcelable(getString(R.string.recipe_base_list_key), Parcels.wrap(recipeBaseList));
         fragment.setArguments(bundle);
 
         //Create the transaction to interact with the stack and add previous fragment to the backstack
