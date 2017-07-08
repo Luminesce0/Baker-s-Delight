@@ -31,9 +31,6 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     //Click Handler
     private final RecipeDetailListAdapterOnClickHandler mClickHandler;
 
-    //Recipe Base List for detail step passing
-    private List<RecipeBase> mRecipeBaseList;
-
     //Recipe Base object to obtain lists
     private RecipeBase mRecipeBase;
 
@@ -48,12 +45,10 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private int mIngredientsSize;
     private int mStepsSize;
 
-    public RecipeDetailAdapter(Context context, RecipeBase recipeBase, List<RecipeBase> recipeBaseList,
-                               RecipeDetailListAdapterOnClickHandler clickHandler) {
+    public RecipeDetailAdapter(Context context, RecipeBase recipeBase, RecipeDetailListAdapterOnClickHandler clickHandler) {
         mContext = context;
         mClickHandler = clickHandler;
         mRecipeBase = recipeBase;
-        mRecipeBaseList = recipeBaseList;
 
         //Verify list isn't empty
         if (recipeBase.getRecipeSteps().size() > 0) {
@@ -158,7 +153,7 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public interface RecipeDetailListAdapterOnClickHandler {
-        void onListItemClick(RecipeSteps recipeStep, boolean isRecipe, List<RecipeBase> mRecipeBaseList);
+        void onListItemClick(RecipeSteps recipeStep, List<RecipeSteps> mStepsList, boolean isRecipe);
     }
 
     public class RecipeIngredientViewHolder extends RecyclerView.ViewHolder {
@@ -212,11 +207,11 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             if (getAdapterPosition() >= mIngredientsSize) {
                 //Clicked item is a recipe step
                 isRecipeStep = true;
-                mClickHandler.onListItemClick(recipeStep, isRecipeStep, mRecipeBaseList);
+                mClickHandler.onListItemClick(recipeStep, mStepsList, isRecipeStep);
             } else {
                 //Clicked item is not a recipe step
                 isRecipeStep = false;
-                mClickHandler.onListItemClick(recipeStep, isRecipeStep, mRecipeBaseList);
+                mClickHandler.onListItemClick(recipeStep, mStepsList, isRecipeStep);
             }
 
         }

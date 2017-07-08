@@ -73,7 +73,7 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
     }
 
     public interface RecipeBaseListAdapterOnClickHandler {
-        void onListItemClick(RecipeBase recipeBase, List<RecipeBase> mRecipeBaseList);
+        void onListItemClick(RecipeBase recipeBase);
     }
 
     public class RecipeListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -120,7 +120,7 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
             RecipeBase recipeBase = mRecipeBaseList.get(getAdapterPosition());
 
             //Send the relevant mRecipeBase
-            mClickHandler.onListItemClick(recipeBase, mRecipeBaseList);
+            mClickHandler.onListItemClick(recipeBase);
         }
     }
 }

@@ -115,7 +115,7 @@ public class RecipeListFragment extends Fragment implements
     }
 
     @Override
-    public void onListItemClick(RecipeBase recipeBase, List<RecipeBase> recipeBaseList) {
+    public void onListItemClick(RecipeBase recipeBase) {
         Log.d(LOG_TAG, "onClick of [RecipeListFragment]");
         //Create the fragment to be added to the stack
         Fragment fragment = new RecipeDetailFragment();
@@ -123,7 +123,6 @@ public class RecipeListFragment extends Fragment implements
         //Create bundle to attach to and send with the fragment
         Bundle bundle = new Bundle();
         bundle.putParcelable(getString(R.string.recipe_base_key), Parcels.wrap(recipeBase));
-        bundle.putParcelable(getString(R.string.recipe_base_list_key), Parcels.wrap(recipeBaseList));
         fragment.setArguments(bundle);
 
         //Create the transaction to interact with the stack and add previous fragment to the backstack
