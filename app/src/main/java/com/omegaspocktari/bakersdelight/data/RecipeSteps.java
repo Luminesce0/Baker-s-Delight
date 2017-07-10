@@ -26,8 +26,8 @@ public class RecipeSteps {
         this.mThumbnailURL = mThumbnailURL;
     }
 
-    public String getID() {
-        return mID;
+    public int getID() {
+        return Integer.getInteger(mID);
     }
 
     public String getShortDescription() {

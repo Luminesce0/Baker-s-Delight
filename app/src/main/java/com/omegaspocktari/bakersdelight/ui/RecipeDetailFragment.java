@@ -91,11 +91,11 @@ public class RecipeDetailFragment extends Fragment implements
         if (isRecipeStep == true) {
             Log.d(LOG_TAG, "onClick of [RecipeDetailFragment]");
             //Create the fragment to be added to the stack
-            Fragment fragment = new RecipeDetailFragment();
+            Fragment fragment = new RecipeDetailStepFragment();
 
             //Create bundle to attach to and send with the fragment
             Bundle bundle = new Bundle();
-            bundle.putParcelable(getString(R.string.recipe_base_key), Parcels.wrap(recipeStep));
+            bundle.putParcelable(getString(R.string.recipe_step_key), Parcels.wrap(recipeStep));
             bundle.putParcelable(getString(R.string.recipe_step_list_key), Parcels.wrap(mStepsList));
             fragment.setArguments(bundle);
 

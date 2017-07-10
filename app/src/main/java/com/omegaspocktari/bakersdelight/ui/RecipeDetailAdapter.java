@@ -200,7 +200,7 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public void onClick(View v) {
             Log.d(LOG_TAG, "onClick of [RecipeDetailAdapter] " + getAdapterPosition());
             //Get current recipe step
-            RecipeSteps recipeStep = mStepsList.get(getAdapterPosition());
+            RecipeSteps recipeStep = mStepsList.get(getAdapterPosition() - mIngredientsSize);
             boolean isRecipeStep;
 
             //Identify clicked item
