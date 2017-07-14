@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,6 +29,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.view.View.GONE;
+
 /**
  * Created by ${Michael} on 6/26/2017.
  */
@@ -42,8 +45,13 @@ public class RecipeListFragment extends Fragment implements
     //Loader ID
     private static final int RECIPE_RESULTS_LOADER = 1;
 
+    //Grid Span Constant
+    private static final int GRID_LAYOUT_SPAN = 3;
+
     //Bundle key for Url
     private static final String RECIPE_INFO_URL = "recipeUrl";
+
+
 
     //Views for layout
     @BindView(R.id.rv_recipe_list)
@@ -52,11 +60,17 @@ public class RecipeListFragment extends Fragment implements
     //Layout Manager
     private LinearLayoutManager layoutManager;
 
+    //Tablet View Layout Manager
+    private GridLayoutManager gridLayoutManager;
+
     //Adapter
     private RecipeListAdapter mAdapter;
 
     //NetworkInfo to check network connectivity
     private NetworkInfo mNetworkInfo;
+
+    //Tablet Layout Tracker
+    private boolean mTwoPane = false;
 
     //TODO: Potentially found out how to appropriately add butterknife to this
     @Nullable
@@ -76,17 +90,50 @@ public class RecipeListFragment extends Fragment implements
         //Improve performance
         mRecyclerView.setHasFixedSize(true);
 
-        //Create layout manager
-        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        //Decide which layout to choose
+        if (getActivity().findViewById(R.id.activity_main_tablet_recipe_list_holder) != null) {
+            //If a tablet layout is present hide the detail list and detailed step layout
+            getActivity().findViewById(R.id.activity_main_tablet_recipe_step_detail_holder).setVisibility(GONE);
+            getActivity().findViewById(R.id.activity_main_v_fragment_divider).setVisibility(GONE);
 
-        //Bind layout manager
-        mRecyclerView.setLayoutManager(layoutManager);
+            //Set Tablet Layout to true
+            mTwoPane = true;
 
-        //Default adapter
-        mAdapter = new RecipeListAdapter(getContext(), this);
+            //Create layout manager
+            gridLayoutManager = new GridLayoutManager(getContext(), GRID_LAYOUT_SPAN);
 
-        //Bind the adapter
-        mRecyclerView.setAdapter(mAdapter);
+            //Bind layout manager
+            mRecyclerView.setLayoutManager(gridLayoutManager);
+
+            //Default adapter
+            mAdapter = new RecipeListAdapter(getContext(), this);
+
+            //Bind the adapter
+            mRecyclerView.setAdapter(mAdapter);
+
+        } else {
+            //If a single pane layout if present continue as normal
+            //Create layout manager
+            layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+
+            //Bind layout manager
+            mRecyclerView.setLayoutManager(layoutManager);
+
+            //Default adapter
+            mAdapter = new RecipeListAdapter(getContext(), this);
+
+            //Bind the adapter
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
+
+        //Create layout manager for Tablet View
+
+
+
+
+
+
 
         return rootView;
     }
@@ -123,11 +170,12 @@ public class RecipeListFragment extends Fragment implements
         //Create bundle to attach to and send with the fragment
         Bundle bundle = new Bundle();
         bundle.putParcelable(getString(R.string.recipe_base_key), Parcels.wrap(recipeBase));
+        bundle.putBoolean(getString(R.string.tablet_layout_key), mTwoPane);
         fragment.setArguments(bundle);
 
         //Create the transaction to interact with the stack and add previous fragment to the backstack
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.activity_main_fragment_holder, fragment);
+        transaction.replace(R.id.activity_main_tablet_recipe_list_holder, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

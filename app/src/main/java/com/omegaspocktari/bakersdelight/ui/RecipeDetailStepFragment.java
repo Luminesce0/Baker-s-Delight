@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import butterknife.OnClick;
  * Created by ${Michael} on 7/6/2017.
  */
 
+//TODO: Add VideoEXO PLAYER MAX VIDEO PLAY SEE
 public class RecipeDetailStepFragment extends Fragment {
 
     //Logging Tag
@@ -41,6 +43,8 @@ public class RecipeDetailStepFragment extends Fragment {
     Button mPreviousStepButton;
     @BindView(R.id.btn_step_next)
     Button mNextStepButton;
+    @BindView(R.id.fl_button_container)
+    FrameLayout mButtonContainer;
 
     //Button onClick methods
     @OnClick(R.id.btn_step_previous)
@@ -87,6 +91,12 @@ public class RecipeDetailStepFragment extends Fragment {
     private static final int CURRENT_STEP_MOVE_BACKWARDS = 1;
     private static final int CURRENT_STEP_MOVE_FORWARDS = 1;
 
+    //Tablet Layout Tracker
+    private boolean mTwoPane;
+
+    //DetailStepFragment Initialized Tracker
+    private boolean mInitialized = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -103,14 +113,17 @@ public class RecipeDetailStepFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-
-
         if (savedInstanceState == null) {
             Bundle bundle = this.getArguments();
             if (bundle != null) {
                 mRecipeStep = Parcels.unwrap(bundle.getParcelable(getString(R.string.recipe_step_key)));
                 mRecipeStepList = Parcels.unwrap(bundle.getParcelable(getString(R.string.recipe_step_list_key)));
+                mTwoPane = bundle.getBoolean(getString(R.string.tablet_layout_key));
             }
+        }
+
+        if (mTwoPane && !mInitialized) {
+            mButtonContainer.setVisibility(View.GONE);
         }
 
         setupDetailStep();
@@ -141,6 +154,7 @@ public class RecipeDetailStepFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelable(getString(R.string.recipe_step_key), Parcels.wrap(mRecipeStep));
         outState.putParcelable(getString(R.string.recipe_step_list_key), Parcels.wrap(mRecipeStepList));
+        outState.putBoolean(getString(R.string.detail_step_initialized), mInitialized);
     }
 
     /**
@@ -154,6 +168,7 @@ public class RecipeDetailStepFragment extends Fragment {
         if (savedInstanceState != null) {
             mRecipeStep = savedInstanceState.getParcelable(getString(R.string.recipe_step_key));
             mRecipeStepList = Parcels.unwrap(savedInstanceState.getParcelable(getString(R.string.recipe_step_list_key)));
+            mInitialized = savedInstanceState.getBoolean(getString(R.string.detail_step_initialized));
         }
     }
 }

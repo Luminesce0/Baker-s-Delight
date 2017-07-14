@@ -17,4 +17,7 @@
     <!-- Json Information -->
     <string name="json_recipe_url">https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json</string>
     <string name="ingredient_quantity">Quantity:</string>
+    <string name="tablet_layout_key">tabletLayoutKey</string>
+    <string name="current_step_key">currentStepKey</string>
+    <string name="detail_step_initialized">detailStepInitializedKey</string>
 </resources>

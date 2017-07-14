@@ -27,7 +27,7 @@ public class RecipeSteps {
     }
 
     public int getID() {
-        return Integer.getInteger(mID);
+        return Integer.parseInt(mID);
     }
 
     public String getShortDescription() {
