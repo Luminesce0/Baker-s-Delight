@@ -20,4 +20,6 @@
     <string name="tablet_layout_key">tabletLayoutKey</string>
     <string name="current_step_key">currentStepKey</string>
     <string name="detail_step_initialized">detailStepInitializedKey</string>
+    <string name="appwidget_text">EXAMPLE</string>
+        <string name="add_widget">Add widget</string>
 </resources>
