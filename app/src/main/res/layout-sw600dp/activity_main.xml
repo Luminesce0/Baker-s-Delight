@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".ui.MainActivity">
+
+    <!-- Recipe Detail List & Recipe List Fragment -->
+    <FrameLayout
+        android:id="@+id/activity_main_tablet_recipe_list_holder"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4" />
+
+    <!-- Fragment Divider -->
+    <!-- TODO: Maybe delete -->
+    <View
+        android:id="@+id/activity_main_v_fragment_divider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray" />
+
+
+    <!-- Recipe Detail Step Fragment -->
+    <FrameLayout
+        android:id="@+id/activity_main_tablet_recipe_step_detail_holder"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="6" />
+
+
+</LinearLayout>

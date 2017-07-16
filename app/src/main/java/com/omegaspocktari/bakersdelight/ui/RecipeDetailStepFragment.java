@@ -119,6 +119,7 @@ public class RecipeDetailStepFragment extends Fragment {
                 mRecipeStep = Parcels.unwrap(bundle.getParcelable(getString(R.string.recipe_step_key)));
                 mRecipeStepList = Parcels.unwrap(bundle.getParcelable(getString(R.string.recipe_step_list_key)));
                 mTwoPane = bundle.getBoolean(getString(R.string.tablet_layout_key));
+                setupDetailStep();
             }
         }
 
@@ -126,7 +127,6 @@ public class RecipeDetailStepFragment extends Fragment {
             mButtonContainer.setVisibility(View.GONE);
         }
 
-        setupDetailStep();
 
 
         return rootView;
@@ -166,9 +166,11 @@ public class RecipeDetailStepFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null) {
-            mRecipeStep = savedInstanceState.getParcelable(getString(R.string.recipe_step_key));
+            Log.d(LOG_TAG, "Am I run here? WHERE EXPECTED?");
+            mRecipeStep = Parcels.unwrap(savedInstanceState.getParcelable(getString(R.string.recipe_step_key)));
             mRecipeStepList = Parcels.unwrap(savedInstanceState.getParcelable(getString(R.string.recipe_step_list_key)));
             mInitialized = savedInstanceState.getBoolean(getString(R.string.detail_step_initialized));
+            setupDetailStep();
         }
     }
 }
