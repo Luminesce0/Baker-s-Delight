@@ -53,6 +53,8 @@ public class RecipeDetailFragment extends Fragment implements
     //DetailStepFragment Initialized Tracker
     private boolean mInitialized = false;
 
+    //TODO: Potentially remove
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

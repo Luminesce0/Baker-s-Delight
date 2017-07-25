@@ -12,10 +12,14 @@ public class MainActivity extends AppCompatActivity {
     //Logging Tag
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    //Preference Writer
+    private int mRecipeSelected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.activity_main_tablet_recipe_list_holder, new RecipeListFragment())

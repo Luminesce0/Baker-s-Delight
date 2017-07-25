@@ -90,6 +90,8 @@ public class RecipeListFragment extends Fragment implements
         //Improve performance
         mRecyclerView.setHasFixedSize(true);
 
+        //TODO: Get pending intent data
+
         //Decide which layout to choose
         if (getActivity().findViewById(R.id.activity_main_tablet_recipe_list_holder) != null) {
             //If a tablet layout is present hide the detail list and detailed step layout
@@ -125,15 +127,6 @@ public class RecipeListFragment extends Fragment implements
             //Bind the adapter
             mRecyclerView.setAdapter(mAdapter);
         }
-
-
-        //Create layout manager for Tablet View
-
-
-
-
-
-
 
         return rootView;
     }
