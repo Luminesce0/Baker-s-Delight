@@ -93,7 +93,7 @@ public class RecipeListFragment extends Fragment implements
         //TODO: Get pending intent data
 
         //Decide which layout to choose
-        if (getActivity().findViewById(R.id.activity_main_tablet_recipe_list_holder) != null) {
+        if (getActivity().findViewById(R.id.activity_main_tablet_recipe_step_detail_holder) != null) {
             //If a tablet layout is present hide the detail list and detailed step layout
             getActivity().findViewById(R.id.activity_main_tablet_recipe_step_detail_holder).setVisibility(GONE);
             getActivity().findViewById(R.id.activity_main_v_fragment_divider).setVisibility(GONE);
