@@ -1,11 +1,13 @@
 package com.omegaspocktari.bakersdelight.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.omegaspocktari.bakersdelight.R;
+import com.omegaspocktari.bakersdelight.widget.RecipeWidgetProvider;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,6 +16,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Preference Writer
     private int mRecipeSelected;
+
+    //Context
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +31,11 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+        mContext = this;
+
+        RecipeWidgetProvider.sendRefreshBroadcast(mContext);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

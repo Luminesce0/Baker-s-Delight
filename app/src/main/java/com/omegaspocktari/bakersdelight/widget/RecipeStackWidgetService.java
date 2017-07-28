@@ -164,7 +164,7 @@ public class RecipeStackWidgetService extends RemoteViewsService {
 
         @Override
         public boolean hasStableIds() {
-            return false;
+            return true;
         }
     }
 }

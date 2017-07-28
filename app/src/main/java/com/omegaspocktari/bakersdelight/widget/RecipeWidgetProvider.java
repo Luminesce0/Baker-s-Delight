@@ -1,15 +1,17 @@
 package com.omegaspocktari.bakersdelight.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.omegaspocktari.bakersdelight.R;
+import com.omegaspocktari.bakersdelight.ui.MainActivity;
 
 /**
  * Implementation of App Widget functionality.
@@ -25,35 +27,36 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         Log.d(LOG_TAG, "onUpdate() - RecipeWidgetProvider");
 
-        //Update widgets with remote adapter
-        for (int i = 0; i < appWidgetIds.length; ++i) {
+        for (int appWidgetId : appWidgetIds) {
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
 
-            Log.d(LOG_TAG, "onUpdate() - RecipeWidgetProvider" + i);
+            Intent titleIntent = new Intent(context, MainActivity.class);
+            PendingIntent titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent, 0);
 
-            //Point to StackViewsService which will provide views for this collection
-            Intent intent = new Intent(context, RecipeStackWidgetService.class);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
+            views.setOnClickPendingIntent(R.id.tv_widget_title, titlePendingIntent);
 
-//            //TODO: What
-            // When intents are compared, the extras are ignored, so we need to embed the extras
-            // into the data so that the extras will not be ignored.
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-
-            //TODO: My brain
-            //Set the RemoteViews object for the app widget layout.
-            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
-
-            //Setup RemoteViews object to use the appropriate adapter to populate the data.
-            //The adapter connects to the RemoteViewsService through the given intent.
-            rv.setRemoteAdapter(R.id.stack_view, intent);
-
-            //Displayed when the collection has no items
-            rv.setEmptyView(R.id.stack_view, R.id.empty_view);
-
-//          appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.stack_view);
-            appWidgetManager.updateAppWidget(appWidgetIds, rv);
+            Intent stackWidgetServiceIntent = new Intent(context, RecipeStackWidgetService.class);
+            views.setRemoteAdapter(R.id.sv_widget, stackWidgetServiceIntent);
+            appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
+    }
+
+    public static void sendRefreshBroadcast(Context context) {
+        Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        intent.setComponent(new ComponentName(context, RecipeWidgetProvider.class));
+        context.sendBroadcast(intent);
+    }
+
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        final String action = intent.getAction();
+        if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+            AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+            ComponentName componentName = new ComponentName(context, RecipeWidgetProvider.class);
+            mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(componentName), R.id.sv_widget);
+        }
+        super.onReceive(context, intent);
     }
 
     @Override
@@ -83,7 +86,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.stack_view);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.sv_widget);
     }
 }
 
