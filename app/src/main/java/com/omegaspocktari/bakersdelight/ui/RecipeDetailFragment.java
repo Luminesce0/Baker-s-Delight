@@ -1,19 +1,28 @@
 package com.omegaspocktari.bakersdelight.ui;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.omegaspocktari.bakersdelight.R;
 import com.omegaspocktari.bakersdelight.data.RecipeBase;
 import com.omegaspocktari.bakersdelight.data.RecipeSteps;
+import com.omegaspocktari.bakersdelight.utilities.RecipeUtils;
 
 import org.parceler.Parcels;
 
@@ -22,11 +31,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.omegaspocktari.bakersdelight.R.id.activity_main_tablet_recipe_step_detail_holder;
+
 /**
  * Created by ${Michael} on 7/3/2017.
  */
 
 public class RecipeDetailFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<RecipeBase>,
         RecipeDetailAdapter.RecipeDetailListAdapterOnClickHandler {
     //Logging Tag
     private static final String LOG_TAG = RecipeDetailFragment.class.getSimpleName();
@@ -34,6 +46,24 @@ public class RecipeDetailFragment extends Fragment implements
     //Views for layout
     @BindView(R.id.rv_recipe_details_list)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.tv_recipe_detail_list_no_results)
+    TextView mEmptyStateTextView;
+
+    @BindView(R.id.pb_recipe_detail_list_network)
+    ProgressBar mProgressBar;
+
+    //Loader ID
+    private static final int RECIPE_RESULTS_LOADER = 1;
+
+    //Bundle key for recipe preference
+    private static final String RECIPE_BASE_PREFERENCE = "recipeBasePreference";
+
+    //Bundle key for Url
+    private static final String RECIPE_INFO_URL = "recipeUrl";
+
+    //NetworkInfo to check network connectivity
+    private NetworkInfo mNetworkInfo;
 
     //Layout Managers
     private GridLayoutManager gridLayoutManager;
@@ -53,6 +83,12 @@ public class RecipeDetailFragment extends Fragment implements
     //DetailStepFragment Initialized Tracker
     private boolean mInitialized = false;
 
+    //Selected recipe from widget intent;
+    private int mSelectedRecipe;
+
+    //Verify intent
+    private String mIntentChecker;
+
     //TODO: Potentially remove
 
     @Nullable
@@ -62,17 +98,36 @@ public class RecipeDetailFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.recipe_detail_fragment, container, false);
         ButterKnife.bind(this, rootView);
 
+        // Acquire a connectivity manager to see if the network is connected.
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Get the current active network's info.
+        mNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
         //Acquire bundled information
         Bundle bundle = this.getArguments();
+
         if (bundle != null) {
+            mIntentChecker = bundle.getString(getString(R.string.recipe_widget_key));
+
+            if (mIntentChecker != null && mIntentChecker.equals(getString(R.string.recipe_widget_key))){
+                mSelectedRecipe = bundle.getInt(getString(R.string.recipe_widget_preference_key));
+                mTwoPane = bundle.getBoolean(getString(R.string.tablet_layout_key));
+                fetchRecipes();
+            }
+
             mRecipeBase = Parcels.unwrap(bundle.getParcelable(getString(R.string.recipe_base_key)));
             mTwoPane = bundle.getBoolean(getString(R.string.tablet_layout_key));
         }
 
         //If tablet layout load and show other fragment
-        if (mTwoPane && !mInitialized) {
+        if (mTwoPane && !mInitialized && mIntentChecker != null && mIntentChecker.equals(getString(R.string.recipe_widget_key))) {
+            getActivity().findViewById(activity_main_tablet_recipe_step_detail_holder).setVisibility(View.VISIBLE);
+            getActivity().findViewById(R.id.activity_main_v_fragment_divider).setVisibility(View.VISIBLE);
+        } else if (mTwoPane && !mInitialized) {
             createDetailStepFragment();
-            getActivity().findViewById(R.id.activity_main_tablet_recipe_step_detail_holder).setVisibility(View.VISIBLE);
+            getActivity().findViewById(activity_main_tablet_recipe_step_detail_holder).setVisibility(View.VISIBLE);
             getActivity().findViewById(R.id.activity_main_v_fragment_divider).setVisibility(View.VISIBLE);
         }
 
@@ -96,7 +151,11 @@ public class RecipeDetailFragment extends Fragment implements
         });
 
         //Setup the adapter
-        mRecipeDetailAdapter = new RecipeDetailAdapter(getContext(), mRecipeBase, this);
+        if (mRecipeBase != null) {
+            mRecipeDetailAdapter = new RecipeDetailAdapter(getContext(), mRecipeBase, this);
+        } else {
+            mRecipeDetailAdapter = new RecipeDetailAdapter(getContext(), this);
+        }
 
         //Setup Recycler View
         mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -146,7 +205,7 @@ public class RecipeDetailFragment extends Fragment implements
 
         //Create the transaction to interact with the stack and add previous fragment to the backstack
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.activity_main_tablet_recipe_step_detail_holder, fragment);
+        transaction.replace(activity_main_tablet_recipe_step_detail_holder, fragment);
         transaction.commit();
     }
 
@@ -170,7 +229,7 @@ public class RecipeDetailFragment extends Fragment implements
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
             if (mTwoPane) {
-                transaction.replace(R.id.activity_main_tablet_recipe_step_detail_holder, fragment);
+                transaction.replace(activity_main_tablet_recipe_step_detail_holder, fragment);
                 transaction.commit();
             } else {
                 transaction.replace(R.id.activity_main_tablet_recipe_list_holder, fragment);
@@ -179,5 +238,83 @@ public class RecipeDetailFragment extends Fragment implements
             }
 
         }
+    }
+
+    public void updateFragment() {
+        new Thread(new Runnable() {
+            public void run() {
+                // a potentially  time consuming task
+
+                getActivity().findViewById(activity_main_tablet_recipe_step_detail_holder).post(new Runnable() {
+                    public void run() {
+                        createDetailStepFragment();
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void fetchRecipes() {
+        if (mNetworkInfo != null && mNetworkInfo.isConnected()) {
+
+            Bundle recipeInfoBundle = new Bundle();
+            recipeInfoBundle.putString(RECIPE_INFO_URL, getString(R.string.json_recipe_url));
+            recipeInfoBundle.putInt(RECIPE_BASE_PREFERENCE, mSelectedRecipe);
+
+            LoaderManager loaderManager = getActivity().getSupportLoaderManager();
+            Loader<String> recipeLoader = loaderManager.getLoader(RECIPE_RESULTS_LOADER);
+            if (recipeLoader == null) {
+                loaderManager.initLoader(RECIPE_RESULTS_LOADER, recipeInfoBundle, this).forceLoad();
+            } else {
+                loaderManager.restartLoader(RECIPE_RESULTS_LOADER, recipeInfoBundle, this).forceLoad();
+            }
+        }
+    }
+
+    @Override
+    public Loader<RecipeBase> onCreateLoader(int id, final Bundle args) {
+
+        return new AsyncTaskLoader<RecipeBase>(getContext()) {
+            /**
+             * Subclasses must implement this to take care of loading their data,
+             * as per {@link #startLoading()}.  This is not called by clients directly,
+             * but as a result of a call to {@link #startLoading()}.
+             */
+            @Override
+            protected void onStartLoading() {
+                mProgressBar.setVisibility(View.VISIBLE);
+                super.onStartLoading();
+            }
+
+            @Override
+            public RecipeBase loadInBackground() {
+                //Grab URL from bundle argument
+                String jsonUrl = args.getString(RECIPE_INFO_URL);
+                int recipeSelected = args.getInt(RECIPE_BASE_PREFERENCE);
+
+                //Fetch recipe information & return results after proper recipe is selected
+                List<RecipeBase> recipeBaseList = RecipeUtils.fetchRecipeData(jsonUrl);
+
+                //Return recipe
+                return recipeBaseList.get(recipeSelected);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<RecipeBase> loader, RecipeBase recipeBase) {
+        mProgressBar.setVisibility(View.GONE);
+        mRecipeBase = recipeBase;
+        if (mRecipeBase != null) {
+            mRecipeDetailAdapter.swapRecipeBase(mRecipeBase);
+            updateFragment();
+        } else {
+            mEmptyStateTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<RecipeBase> loader) {
+
     }
 }

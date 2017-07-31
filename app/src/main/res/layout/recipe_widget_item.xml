@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:id="@+id/ll_widget_item"
+    android:layout_width="160dp"
     android:layout_height="match_parent"
-    android:id="@+id/cv_widget_item">
+    android:layout_margin="8dp"
+    android:background="@android:color/background_light"
+    android:orientation="vertical">
+
 
     <TextView
         android:id="@+id/tv_widget_ingredient_header"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        android:text="@string/widget_ingredient_header"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Ingredient 1/10" />
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:gravity="right" />
+
+    <TextView
+        android:id="@+id/tv_widget_recipe_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center" />
+
 
     <TextView
         android:id="@+id/tv_widget_ingredient_ingredient"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_widget_ingredient_header"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        android:lines="3"
         tools:text="Graham Cracker Crumbs" />
 
     <TextView
         android:id="@+id/tv_widget_ingredient_quantity_measure"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_widget_ingredient_ingredient"
-        tools:text="6 CUP" />
+        android:layout_margin="8dp"
+        android:gravity="left"/>
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

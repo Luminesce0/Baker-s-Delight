@@ -30,7 +30,7 @@
         </receiver>
 
         <service
-            android:name="widget.RecipeStackWidgetService"
+            android:name=".widget.RecipeStackWidgetService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 

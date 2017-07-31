@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.omegaspocktari.bakersdelight.R;
 import com.omegaspocktari.bakersdelight.data.RecipeBase;
@@ -56,6 +58,12 @@ public class RecipeListFragment extends Fragment implements
     //Views for layout
     @BindView(R.id.rv_recipe_list)
     RecyclerView mRecyclerView;
+
+    @BindView(R.id.tv_recipe_list_no_results)
+    TextView mEmptyStateTextView;
+
+    @BindView(R.id.pb_recipe_list_network)
+    ProgressBar mProgressBar;
 
     //Layout Manager
     private LinearLayoutManager layoutManager;
@@ -157,6 +165,9 @@ public class RecipeListFragment extends Fragment implements
     @Override
     public void onListItemClick(RecipeBase recipeBase) {
         Log.d(LOG_TAG, "onClick of [RecipeListFragment]");
+
+
+
         //Create the fragment to be added to the stack
         Fragment fragment = new RecipeDetailFragment();
 
@@ -180,6 +191,7 @@ public class RecipeListFragment extends Fragment implements
 
             @Override
             protected void onStartLoading() {
+                mProgressBar.setVisibility(View.VISIBLE);
                 super.onStartLoading();
             }
 
@@ -200,7 +212,10 @@ public class RecipeListFragment extends Fragment implements
     public void onLoadFinished(Loader<List<RecipeBase>> loader, List<RecipeBase> recipeBaseList) {
         //If results aren't null, swap the list
         if (recipeBaseList != null) {
+            mProgressBar.setVisibility(View.GONE);
             mAdapter.swapList(recipeBaseList);
+        } else {
+            mEmptyStateTextView.setVisibility(View.VISIBLE);
         }
     }
 

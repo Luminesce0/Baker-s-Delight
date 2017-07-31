@@ -1,6 +1,7 @@
 package com.omegaspocktari.bakersdelight.widget;
 
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -31,12 +32,20 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
 
             Intent titleIntent = new Intent(context, MainActivity.class);
-            PendingIntent titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent, 0);
+            PendingIntent titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            views.setOnClickPendingIntent(R.id.tv_widget_title, titlePendingIntent);
+//            views.setOnClickPendingIntent(R.id.sv_widget, titlePendingIntent);
 
             Intent stackWidgetServiceIntent = new Intent(context, RecipeStackWidgetService.class);
             views.setRemoteAdapter(R.id.sv_widget, stackWidgetServiceIntent);
+
+            //Setup onClick for StackView items
+            Intent clickIntentTemplate = new Intent(context, MainActivity.class);
+            PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
+                    .addNextIntentWithParentStack(clickIntentTemplate)
+                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            views.setPendingIntentTemplate(R.id.sv_widget, clickPendingIntentTemplate);
+
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
     }
@@ -52,6 +61,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
         if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+            Log.d(LOG_TAG, "Do the thing?!?!?!?!?!?!?!?!?!?!?");
             AppWidgetManager mgr = AppWidgetManager.getInstance(context);
             ComponentName componentName = new ComponentName(context, RecipeWidgetProvider.class);
             mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(componentName), R.id.sv_widget);

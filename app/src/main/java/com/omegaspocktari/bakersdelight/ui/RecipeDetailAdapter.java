@@ -45,6 +45,11 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private int mIngredientsSize;
     private int mStepsSize;
 
+    public RecipeDetailAdapter(Context context, RecipeDetailListAdapterOnClickHandler clickHandler) {
+        mContext = context;
+        mClickHandler = clickHandler;
+    }
+
     public RecipeDetailAdapter(Context context, RecipeBase recipeBase, RecipeDetailListAdapterOnClickHandler clickHandler) {
         mContext = context;
         mClickHandler = clickHandler;
@@ -68,6 +73,30 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             //Set list tracker size to determine appropriate view holder
             mStepsSize = mStepsList.size();
         }
+    }
+
+    public void swapRecipeBase(RecipeBase recipeBase) {
+        //Verify list isn't empty
+        mRecipeBase = recipeBase;
+
+        if (recipeBase.getRecipeSteps().size() > 0) {
+
+            //Set new list
+            mIngredientsList = mRecipeBase.getRecipeIngredients();
+
+            //Set list tracker size to determine appropriate view holder
+            mIngredientsSize = mIngredientsList.size();
+        }
+
+        //Verify list isn't empty
+        if (recipeBase.getRecipeIngredients().size() > 0) {
+            //Set new list
+            mStepsList = mRecipeBase.getRecipeSteps();
+
+            //Set list tracker size to determine appropriate view holder
+            mStepsSize = mStepsList.size();
+        }
+        notifyDataSetChanged();
     }
 
     //TODO: Pretty sure I can remove this

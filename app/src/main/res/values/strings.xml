@@ -27,5 +27,6 @@
 
     <!-- Shared Preference File Names -->
     <string name="recipe_widget_preferences">widgetPreferences</string>
+    <string name="recipe_widget_preference_key">recipeWidgetPreferenceKey</string>
 
 </resources>

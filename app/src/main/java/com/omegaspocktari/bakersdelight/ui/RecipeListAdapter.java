@@ -1,6 +1,7 @@
 package com.omegaspocktari.bakersdelight.ui;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,12 +12,15 @@ import android.widget.TextView;
 
 import com.omegaspocktari.bakersdelight.R;
 import com.omegaspocktari.bakersdelight.data.RecipeBase;
+import com.omegaspocktari.bakersdelight.widget.RecipeWidgetProvider;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by ${Michael} on 6/26/2017.
@@ -118,6 +122,16 @@ class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeLis
             Log.d(LOG_TAG, "onClick of [RecipeListAdapter]");
             //Get mRecipeBase
             RecipeBase recipeBase = mRecipeBaseList.get(getAdapterPosition());
+
+            //Use the adapter position to put the current recipe as the preferred recipe
+            //for the widget
+            SharedPreferences prefs = mContext.getSharedPreferences(
+                    mContext.getString(R.string.recipe_widget_preferences), MODE_PRIVATE);
+            prefs.edit().putInt(mContext.getString(R.string.recipe_widget_preference_key),
+                    getAdapterPosition()).commit();
+
+            //Update widget upon onClick
+            RecipeWidgetProvider.sendRefreshBroadcast(mContext);
 
             //Send the relevant mRecipeBase
             mClickHandler.onListItemClick(recipeBase);
