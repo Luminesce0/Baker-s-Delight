@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private int mRecipeSelected;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
                 mTwoPane = false;
             }
 
-                Fragment fragment = new RecipeDetailFragment();
-                Fragment fragmentRemove = new RecipeListFragment();
+            Fragment fragment = new RecipeDetailFragment();
+            Fragment fragmentRemove = new RecipeListFragment();
 
             //Create bundle to attach to and send with the fragment
             Bundle bundle = new Bundle();
@@ -78,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = this;
 
+        //Update widget
         RecipeWidgetProvider.sendRefreshBroadcast(mContext);
     }
 
@@ -89,9 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        Log.d(LOG_TAG, "It worked boi");
 
-
+        //Start up RecipeDetailFragment
         if (mIntentIdentifier != null && mIntentIdentifier.equals(getString(R.string.recipe_widget_key))) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.activity_main_tablet_recipe_list_holder, new RecipeDetailFragment())

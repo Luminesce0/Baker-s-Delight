@@ -52,38 +52,28 @@ public class RecipeListFragment extends Fragment implements
 
     //Bundle key for Url
     private static final String RECIPE_INFO_URL = "recipeUrl";
-
-
-
     //Views for layout
     @BindView(R.id.rv_recipe_list)
     RecyclerView mRecyclerView;
-
     @BindView(R.id.tv_recipe_list_no_results)
     TextView mEmptyStateTextView;
-
     @BindView(R.id.pb_recipe_list_network)
     ProgressBar mProgressBar;
-
     //Layout Manager
     private LinearLayoutManager layoutManager;
-
     //Tablet View Layout Manager
     private GridLayoutManager gridLayoutManager;
-
     //Adapter
     private RecipeListAdapter mAdapter;
-
     //NetworkInfo to check network connectivity
     private NetworkInfo mNetworkInfo;
-
     //Tablet Layout Tracker
     private boolean mTwoPane = false;
 
-    //TODO: Potentially found out how to appropriately add butterknife to this
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         //Acquire the layout we wish to use and bind views
         View rootView = inflater.inflate(R.layout.recipe_list_fragment, container, false);
         ButterKnife.bind(this, rootView);
@@ -97,8 +87,6 @@ public class RecipeListFragment extends Fragment implements
 
         //Improve performance
         mRecyclerView.setHasFixedSize(true);
-
-        //TODO: Get pending intent data
 
         //Decide which layout to choose
         if (getActivity().findViewById(R.id.activity_main_tablet_recipe_step_detail_holder) != null) {
@@ -120,7 +108,6 @@ public class RecipeListFragment extends Fragment implements
 
             //Bind the adapter
             mRecyclerView.setAdapter(mAdapter);
-
         } else {
             //If a single pane layout if present continue as normal
             //Create layout manager
@@ -135,20 +122,17 @@ public class RecipeListFragment extends Fragment implements
             //Bind the adapter
             mRecyclerView.setAdapter(mAdapter);
         }
-
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
         fetchRecipes();
     }
 
     private void fetchRecipes() {
         if (mNetworkInfo != null && mNetworkInfo.isConnected()) {
-
             Bundle recipeInfoBundle = new Bundle();
             recipeInfoBundle.putString(RECIPE_INFO_URL, getString(R.string.json_recipe_url));
 
@@ -165,8 +149,6 @@ public class RecipeListFragment extends Fragment implements
     @Override
     public void onListItemClick(RecipeBase recipeBase) {
         Log.d(LOG_TAG, "onClick of [RecipeListFragment]");
-
-
 
         //Create the fragment to be added to the stack
         Fragment fragment = new RecipeDetailFragment();

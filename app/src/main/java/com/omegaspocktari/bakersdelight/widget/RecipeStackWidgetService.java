@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -65,23 +64,11 @@ public class RecipeStackWidgetService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
-            Log.d(LOG_TAG, "onCreate() Beginning");
-            //TODO: Do I need to do anything here?
-            //Fetch recipe data
-//            mRecipeItems = RecipeUtils.fetchRecipeData(mContext.getString(R.string.json_recipe_url));
 
             //Obtain last used recipe or the default recipe from Shared Preferences
             SharedPreferences prefs = getSharedPreferences(getString(R.string.recipe_widget_preferences), MODE_PRIVATE);
             int defaultValue = getResources().getInteger(R.integer.default_recipe_value);
             mCurrentRecipe = prefs.getInt(getString(R.string.recipe_widget_preference_key), defaultValue);
-
-            //Obtain proper ingredient list from the last used recipe or default recipe
-//            mRecipeIngredients = recipeBase.getRecipeIngredients();
-
-            //Reflect amount of ingredients
-//            mCount = mRecipeItems.size();
-
-//            Log.d(LOG_TAG, "onCreate() " + mRecipeIngredients.get(1).getIngredient());
         }
 
         public void onDataSetChanged() {
@@ -89,10 +76,9 @@ public class RecipeStackWidgetService extends RemoteViewsService {
             //Fetch recipe data
             mRecipeItems = RecipeUtils.fetchRecipeData(mContext.getString(R.string.json_recipe_url));
 
-            //Fetch current recipe upon update
+            //Fetch current recipe upon update with preference information
             SharedPreferences prefs = getSharedPreferences(getString(R.string.recipe_widget_preferences), MODE_PRIVATE);
             mCurrentRecipe = prefs.getInt(getString(R.string.recipe_widget_preference_key), defaultValue);
-
             mRecipeBase = mRecipeItems.get(mCurrentRecipe);
 
             //Obtain Recipe Name
@@ -118,7 +104,6 @@ public class RecipeStackWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
-            Log.d(LOG_TAG, "getViewAt()");
 
             //Get appropriate recipe ingredient
             RecipeIngredients recipeIngredient = mRecipeIngredients.get(position);
@@ -128,9 +113,6 @@ public class RecipeStackWidgetService extends RemoteViewsService {
 
             //Recipe Ingredient Header
             String ingredientPosition =
-                    //TODO: Decide on a layout
-//                    getString(R.string.widget_ingredient_header)
-//                    + " " //Space
                     + position + READABILITY_INCREMENT
                     + "/" //Divider
                     + mCount;
@@ -155,7 +137,6 @@ public class RecipeStackWidgetService extends RemoteViewsService {
             fillInIntent.putExtra(getString(R.string.recipe_widget_preference_key), mCurrentRecipe);
             rv.setOnClickFillInIntent(R.id.ll_widget_item, fillInIntent);
 
-            Log.d(LOG_TAG, "getViewAt() End" + recipeIngredient.getIngredient());
             return rv;
         }
 

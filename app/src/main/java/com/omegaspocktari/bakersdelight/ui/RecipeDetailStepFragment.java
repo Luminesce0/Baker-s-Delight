@@ -33,7 +33,9 @@ public class RecipeDetailStepFragment extends Fragment {
 
     //Logging Tag
     private static final String LOG_TAG = RecipeDetailStepFragment.class.getSimpleName();
-
+    //Integer Constants
+    private static final int CURRENT_STEP_MOVE_BACKWARDS = 1;
+    private static final int CURRENT_STEP_MOVE_FORWARDS = 1;
     //Views for Layout
     @BindView(R.id.tv_step_short_description)
     TextView mStepShortDescription;
@@ -45,6 +47,13 @@ public class RecipeDetailStepFragment extends Fragment {
     Button mNextStepButton;
     @BindView(R.id.fl_button_container)
     FrameLayout mButtonContainer;
+    //RecipeBase Objects
+    private RecipeSteps mRecipeStep;
+    private List<RecipeSteps> mRecipeStepList;
+    //Tablet Layout Tracker
+    private boolean mTwoPane;
+    //DetailStepFragment Initialized Tracker
+    private boolean mInitialized = false;
 
     //Button onClick methods
     @OnClick(R.id.btn_step_previous)
@@ -65,6 +74,7 @@ public class RecipeDetailStepFragment extends Fragment {
         }
 
     }
+
     @OnClick(R.id.btn_step_next)
     public void nextStep() {
         //Current step id
@@ -82,20 +92,6 @@ public class RecipeDetailStepFragment extends Fragment {
             Toast.makeText(getContext(), "This is the last step", Toast.LENGTH_SHORT).show();
         }
     }
-
-    //RecipeBase Objects
-    private RecipeSteps mRecipeStep;
-    private List<RecipeSteps> mRecipeStepList;
-
-    //Integer Constants
-    private static final int CURRENT_STEP_MOVE_BACKWARDS = 1;
-    private static final int CURRENT_STEP_MOVE_FORWARDS = 1;
-
-    //Tablet Layout Tracker
-    private boolean mTwoPane;
-
-    //DetailStepFragment Initialized Tracker
-    private boolean mInitialized = false;
 
     @Nullable
     @Override
@@ -128,7 +124,6 @@ public class RecipeDetailStepFragment extends Fragment {
         }
 
 
-
         return rootView;
     }
 
@@ -137,7 +132,7 @@ public class RecipeDetailStepFragment extends Fragment {
         //Set proper step info
         mStepShortDescription.setText(mRecipeStep.getShortDescription());
         mStepDescription.setText(mRecipeStep.getDescription());
-        if (mRecipeStep.getID() == 0 ) {
+        if (mRecipeStep.getID() == 0) {
             mStepDescription.setVisibility(View.INVISIBLE);
         } else {
             mStepDescription.setVisibility(View.VISIBLE);

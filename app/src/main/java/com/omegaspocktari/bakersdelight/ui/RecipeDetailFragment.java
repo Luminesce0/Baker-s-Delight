@@ -42,26 +42,19 @@ public class RecipeDetailFragment extends Fragment implements
         RecipeDetailAdapter.RecipeDetailListAdapterOnClickHandler {
     //Logging Tag
     private static final String LOG_TAG = RecipeDetailFragment.class.getSimpleName();
-
+    //Loader ID
+    private static final int RECIPE_RESULTS_LOADER = 1;
+    //Bundle key for recipe preference
+    private static final String RECIPE_BASE_PREFERENCE = "recipeBasePreference";
+    //Bundle key for Url
+    private static final String RECIPE_INFO_URL = "recipeUrl";
     //Views for layout
     @BindView(R.id.rv_recipe_details_list)
     RecyclerView mRecyclerView;
-
     @BindView(R.id.tv_recipe_detail_list_no_results)
     TextView mEmptyStateTextView;
-
     @BindView(R.id.pb_recipe_detail_list_network)
     ProgressBar mProgressBar;
-
-    //Loader ID
-    private static final int RECIPE_RESULTS_LOADER = 1;
-
-    //Bundle key for recipe preference
-    private static final String RECIPE_BASE_PREFERENCE = "recipeBasePreference";
-
-    //Bundle key for Url
-    private static final String RECIPE_INFO_URL = "recipeUrl";
-
     //NetworkInfo to check network connectivity
     private NetworkInfo mNetworkInfo;
 
@@ -111,7 +104,7 @@ public class RecipeDetailFragment extends Fragment implements
         if (bundle != null) {
             mIntentChecker = bundle.getString(getString(R.string.recipe_widget_key));
 
-            if (mIntentChecker != null && mIntentChecker.equals(getString(R.string.recipe_widget_key))){
+            if (mIntentChecker != null && mIntentChecker.equals(getString(R.string.recipe_widget_key))) {
                 mSelectedRecipe = bundle.getInt(getString(R.string.recipe_widget_preference_key));
                 mTwoPane = bundle.getBoolean(getString(R.string.tablet_layout_key));
                 fetchRecipes();
@@ -190,7 +183,7 @@ public class RecipeDetailFragment extends Fragment implements
         }
     }
 
-    public void createDetailStepFragment () {
+    public void createDetailStepFragment() {
         Log.d(LOG_TAG, "TWO PANE LAYOUT");
         Fragment fragment = new RecipeDetailStepFragment();
 
@@ -213,7 +206,6 @@ public class RecipeDetailFragment extends Fragment implements
     public void onListItemClick(RecipeSteps recipeStep, List<RecipeSteps> mStepsList, boolean isRecipeStep) {
         if (isRecipeStep == true) {
             Log.d(LOG_TAG, "onClick of [RecipeDetailFragment]");
-            //Store the selected item
 
             //Create the fragment to be added to the stack
             Fragment fragment = new RecipeDetailStepFragment();

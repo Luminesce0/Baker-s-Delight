@@ -8,7 +8,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.omegaspocktari.bakersdelight.R;
@@ -21,21 +20,14 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
     private static final String LOG_TAG = RecipeWidgetProvider.class.getSimpleName();
 
-    public static final String ACTION_OPEN_RECIPE_DETAILS = "com.omegaspocktari.bakersdelight.action.recipe_details";
-    public static final String RECIPE_ITEM = "com.omegaspocktari.bakersdelight.action.recipe_item";
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.d(LOG_TAG, "onUpdate() - RecipeWidgetProvider");
 
         for (int appWidgetId : appWidgetIds) {
+            //Get widget layout more or less
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget_provider);
 
-            Intent titleIntent = new Intent(context, MainActivity.class);
-            PendingIntent titlePendingIntent = PendingIntent.getActivity(context, 0, titleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//            views.setOnClickPendingIntent(R.id.sv_widget, titlePendingIntent);
-
+            //Set teh RecipeStackWidgetService as the remote adapter for our Stack view
             Intent stackWidgetServiceIntent = new Intent(context, RecipeStackWidgetService.class);
             views.setRemoteAdapter(R.id.sv_widget, stackWidgetServiceIntent);
 
@@ -61,7 +53,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
         if (action.equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-            Log.d(LOG_TAG, "Do the thing?!?!?!?!?!?!?!?!?!?!?");
+            //Update the appropriate widgets
             AppWidgetManager mgr = AppWidgetManager.getInstance(context);
             ComponentName componentName = new ComponentName(context, RecipeWidgetProvider.class);
             mgr.notifyAppWidgetViewDataChanged(mgr.getAppWidgetIds(componentName), R.id.sv_widget);
@@ -79,20 +71,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    /**
-     * Called in response to the {@link AppWidgetManager#ACTION_APPWIDGET_OPTIONS_CHANGED}
-     * broadcast when this widget has been layed out at a new size.
-     * <p>
-     * {@more}
-     *
-     * @param context          The {@link Context Context} in which this receiver is
-     *                         running.
-     * @param appWidgetManager A {@link AppWidgetManager} object you can call {@link
-     *                         AppWidgetManager#updateAppWidget} on.
-     * @param appWidgetId      The appWidgetId of the widget whose size changed.
-     * @param newOptions       The appWidgetId of the widget whose size changed.
-     * @see AppWidgetManager#ACTION_APPWIDGET_OPTIONS_CHANGED
-     */
     @Override
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
