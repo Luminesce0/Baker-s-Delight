@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             transaction.replace(R.id.activity_main_tablet_recipe_list_holder, fragment);
             transaction.addToBackStack(null);
             transaction.commit();
+
         } else if (savedInstanceState == null) {
             Log.d(LOG_TAG, "Starting up the other thing /!\\ WARNING /!\\");
             getSupportFragmentManager().beginTransaction()

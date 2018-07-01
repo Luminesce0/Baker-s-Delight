@@ -13,6 +13,8 @@ import com.omegaspocktari.bakersdelight.data.RecipeBase;
 import com.omegaspocktari.bakersdelight.data.RecipeIngredients;
 import com.omegaspocktari.bakersdelight.data.RecipeSteps;
 
+import org.apache.commons.text.WordUtils;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -198,7 +200,7 @@ class RecipeDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         public void bind(RecipeIngredients recipeIngredient) {
             //Ingredient Name
-            ingredient.setText(recipeIngredient.getIngredient());
+            ingredient.setText(WordUtils.capitalizeFully(recipeIngredient.getIngredient()));
 
             //Ingredient Measure & Quantity
             String ingredientMeasureAndQuantity = recipeIngredient.getQuantity() + " "
