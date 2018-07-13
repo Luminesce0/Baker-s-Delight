@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,9 +70,12 @@ public class RecipeDetailStepFragment extends Fragment {
     FrameLayout mButtonContainer;
     @BindView(R.id.exo_player_view)
     SimpleExoPlayerView mExoPlayerView;
+    @BindView(R.id.fl_exo_player_view_container)
+    FrameLayout mExoPlayerContainer;
+    @BindView(R.id.fl_step_description_container)
+    FrameLayout mStepDescriptionContainer;
 
     View mRootView;
-
 
     // Exo Player for the exo player view
     private SimpleExoPlayer mExoPlayer;
@@ -83,8 +87,8 @@ public class RecipeDetailStepFragment extends Fragment {
     //DetailStepFragment Initialized Tracker
     private boolean mInitialized = false;
     // Exo Player Window
-    private int currentWindow = 0;
-    private long playbackPosition = 0;
+    private int mCurrentWindow = 0;
+    private long mPlaybackPosition = 0;
     // Exo Player timestamp
 
     //Button onClick methods
@@ -102,18 +106,26 @@ public class RecipeDetailStepFragment extends Fragment {
             setupDetailStep();
 
             //  Make the exo player null to ready for the next steps details
-            mExoPlayer = null;
             releasePlayer();
 
             //  Create the ExoPlayer if video data is present and hide the view if not
-            if (mRecipeStep.mVideoURL != null) {
+            if (mRecipeStep.mVideoURL != null && !mRecipeStep.mVideoURL.isEmpty()) {
                 Log.d(LOG_TAG, "Video URL present" + mRecipeStep.mVideoURL);
-                initializeExoPlayer(mRecipeStep.mVideoURL);
+
+                // Make the ExoPlayer initialize and reappear in the layout and leave enough room for both views
+                mExoPlayerContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0,5f));
+                mStepDescriptionContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  0, 4f));
                 mExoPlayerView.setVisibility(View.VISIBLE);
-            } else if (mRecipeStep.mVideoURL == null  || mRecipeStep.mVideoURL.isEmpty()) {
+                initializeExoPlayer(mRecipeStep.mVideoURL);
+
+            } else if (mRecipeStep.mVideoURL.isEmpty() || mRecipeStep.mVideoURL == null) {
                 Log.d(LOG_TAG, "Video URL not present");
-                releasePlayer();
+
+                // Make the ExoPlayer release and disappear from the layout and have step details take up the extra space
+                mExoPlayerContainer.setLayoutParams(new LinearLayout.LayoutParams(0, 0,0f));
+                mStepDescriptionContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  0, 9f));
                 mExoPlayerView.setVisibility(View.GONE);
+                releasePlayer();
             }
         } else {
             //Inform user that this is the first step
@@ -136,18 +148,27 @@ public class RecipeDetailStepFragment extends Fragment {
             setupDetailStep();
 
             //  Make the exo player null to ready for the next steps details
-            mExoPlayer = null;
             releasePlayer();
 
             //  Create the ExoPlayer if video data is present and hide the view if not
-            if (mRecipeStep.mVideoURL != null && mExoPlayer == null) {
+            if (mRecipeStep.mVideoURL != null && !mRecipeStep.mVideoURL.isEmpty()) {
                 Log.d(LOG_TAG, "Video URL present" + mRecipeStep.mVideoURL);
-                initializeExoPlayer(mRecipeStep.mVideoURL);
+
+                // Make the ExoPlayer initialize and reappear in the layout and leave enough room for both views
+                mExoPlayerContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0,5f));
+                mStepDescriptionContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  0, 4f));
                 mExoPlayerView.setVisibility(View.VISIBLE);
-            } else if (mRecipeStep.mVideoURL == null  || mRecipeStep.mVideoURL.isEmpty()) {
+                initializeExoPlayer(mRecipeStep.mVideoURL);
+
+
+            } else if (mRecipeStep.mVideoURL.isEmpty() || mRecipeStep.mVideoURL == null) {
                 Log.d(LOG_TAG, "Video URL not present");
-                releasePlayer();
+
+                // Make the ExoPlayer release and disappear from the layout and have step details take up the extra space
+                mExoPlayerContainer.setLayoutParams(new LinearLayout.LayoutParams(0, 0,0f));
+                mStepDescriptionContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  0, 9f));
                 mExoPlayerView.setVisibility(View.GONE);
+                releasePlayer();
             }
         } else {
             //Inform user this is the last step
@@ -179,6 +200,17 @@ public class RecipeDetailStepFragment extends Fragment {
                 mTwoPane = bundle.getBoolean(getString(R.string.tablet_layout_key));
                 setupDetailStep();
             }
+        } else if (savedInstanceState != null) {
+            Bundle bundle = this.getArguments();
+            if (bundle != null) {
+                mRecipeStep = Parcels.unwrap(bundle.getParcelable(getString(R.string.recipe_step_key)));
+                mRecipeStepList = Parcels.unwrap(bundle.getParcelable(getString(R.string.recipe_step_list_key)));
+                mTwoPane = bundle.getBoolean(getString(R.string.tablet_layout_key));
+                mInitialized = bundle.getBoolean(getString(R.string.detail_step_initialized));
+                mPlaybackPosition = bundle.getLong(getString(R.string.exo_player_video_position));
+                mCurrentWindow = bundle.getInt(getString(R.string.exo_player_video_window));
+                setupDetailStep();
+            }
         }
 
         if (mTwoPane && !mInitialized) {
@@ -186,10 +218,26 @@ public class RecipeDetailStepFragment extends Fragment {
         }
 
         // Check to see if ExoPlayer is needed
-        if (mRecipeStep.mVideoURL == null || mRecipeStep.mVideoURL.isEmpty()) {
-            mExoPlayerView.setVisibility(View.GONE);
-        }
+        //  Create the ExoPlayer if video data is present and hide the view if not
 
+        if (mRecipeStep.mVideoURL != null && !mRecipeStep.mVideoURL.isEmpty()) {
+            Log.d(LOG_TAG, "Video URL present" + mRecipeStep.mVideoURL);
+
+            // Make the ExoPlayer initialize and reappear in the layout and leave enough room for both views
+            mExoPlayerContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0,5f));
+            mStepDescriptionContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  0, 4f));
+            mExoPlayerView.setVisibility(View.VISIBLE);
+            initializeExoPlayer(mRecipeStep.mVideoURL);
+
+        } else if (mRecipeStep.mVideoURL.isEmpty() || mRecipeStep.mVideoURL == null) {
+            Log.d(LOG_TAG, "Video URL not present");
+
+            // Make the ExoPlayer release and disappear from the layout and have step details take up the extra space
+            mExoPlayerContainer.setLayoutParams(new LinearLayout.LayoutParams(0, 0,0f));
+            mStepDescriptionContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  0, 9f));
+            mExoPlayerView.setVisibility(View.GONE);
+            releasePlayer();
+        }
         Log.d(LOG_TAG, "Quack: " + mRecipeStep.mVideoURL);
 
         return mRootView;
@@ -213,7 +261,7 @@ public class RecipeDetailStepFragment extends Fragment {
             MediaSource mediaSource = buildMediaSource(url, userAgent);
 
             mExoPlayer.setPlayWhenReady(true);
-            mExoPlayer.seekTo(currentWindow, playbackPosition);
+            mExoPlayer.seekTo(mCurrentWindow, mPlaybackPosition);
 
             mExoPlayer.prepare(mediaSource);
         }
@@ -230,8 +278,8 @@ public class RecipeDetailStepFragment extends Fragment {
 
     private void releasePlayer() {
         if (mExoPlayer != null) {
-            playbackPosition = mExoPlayer.getCurrentPosition();
-            currentWindow = mExoPlayer.getCurrentWindowIndex();
+            mPlaybackPosition = mExoPlayer.getCurrentPosition();
+            mCurrentWindow = mExoPlayer.getCurrentWindowIndex();
             mExoPlayer.release();
             mExoPlayer = null;
         }
@@ -309,6 +357,10 @@ public class RecipeDetailStepFragment extends Fragment {
         outState.putParcelable(getString(R.string.recipe_step_key), Parcels.wrap(mRecipeStep));
         outState.putParcelable(getString(R.string.recipe_step_list_key), Parcels.wrap(mRecipeStepList));
         outState.putBoolean(getString(R.string.detail_step_initialized), mInitialized);
+        outState.putBoolean(getString(R.string.tablet_layout_key), mTwoPane);
+        outState.putLong(getString(R.string.exo_player_video_position), mPlaybackPosition);
+        outState.putInt(getString(R.string.exo_player_video_window), mCurrentWindow);
+
     }
 
     /**

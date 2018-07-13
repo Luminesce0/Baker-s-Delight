@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
+    class="com.omegaspocktari.bakersdelight.ui.RecipeDetailStepFragment"
     android:orientation="vertical">
 
     <!-- Step Video Media Section -->
     <FrameLayout
-        android:id="@+id/exo_player_frame"
+        android:id="@+id/fl_exo_player_view_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5">
@@ -33,6 +34,7 @@
 
     <!-- Step Details Section -->
     <FrameLayout
+        android:id="@+id/fl_step_description_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4">
@@ -58,10 +60,10 @@
                 android:id="@+id/tv_step_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_step_short_description"
